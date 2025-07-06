@@ -21,6 +21,8 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
+    "src",
+    "server/src/index.ts",
+    "server/src/db.ts"
   ]
 }

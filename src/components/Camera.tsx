@@ -13,7 +13,7 @@ const tryScan = (canvas: HTMLCanvasElement) => {
 
 // helper to rotate a canvas by given degrees
 const rotateCanvas = (src: HTMLCanvasElement, degrees: number) => {
-    const rad = degrees * Math.PI / 180;
+    const rad = (degrees * Math.PI) / 180;
     const rotated = document.createElement('canvas');
     if (degrees % 180 === 0) {
         rotated.width = src.width;
@@ -39,12 +39,17 @@ const isValidUrl = (text: string) => {
     }
 };
 
-const Camera: React.FC = () => {
+type CameraProps = {
+    onQrResponse?: (data: any) => void;
+};
+
+const Camera: React.FC<CameraProps> = ({ onQrResponse }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [stream, setStream] = useState<MediaStream | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [snapshot, setSnapshot] = useState<string | null>(null);
     const [qrResult, setQrResult] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
     // Reattach stream when snapshot is cleared
     useEffect(() => {
@@ -78,7 +83,7 @@ const Camera: React.FC = () => {
     const scanAndSet = (canvas: HTMLCanvasElement, dataUrl?: string) => {
         let code = tryScan(canvas);
         const codeData = code ? code.data : null;
-        // try rotated if not found
+
         if (!code) {
             for (const deg of [90, 180, 270]) {
                 const rotated = rotateCanvas(canvas, deg);
@@ -86,11 +91,23 @@ const Camera: React.FC = () => {
                 if (code) break;
             }
         }
+
         setQrResult(code ? code.data : 'No QR code detected');
         setSnapshot(dataUrl || canvas.toDataURL('image/png'));
+
+        // send to webhook and notify parent
         if (codeData && isValidUrl(codeData)) {
-            sendQrToWebhook(codeData);
-            console.log('data sent')
+            setLoading(true);
+            sendQrToWebhook(codeData)
+                .then(response => {
+                    onQrResponse?.(response);
+                })
+                .catch(err => {
+                    console.error('Webhook error', err);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
         }
     };
 
@@ -104,10 +121,37 @@ const Camera: React.FC = () => {
         scanAndSet(canvas);
     };
 
+    // inline SVG spinner
+    const spinner = (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+            <svg width="40" height="40" viewBox="0 0 50 50">
+                <circle
+                    cx="25"
+                    cy="25"
+                    r="20"
+                    stroke="#0066cc"
+                    strokeWidth="5"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeDasharray="31.415,31.415"
+                >
+                    <animateTransform
+                        attributeName="transform"
+                        type="rotate"
+                        from="0 25 25"
+                        to="360 25 25"
+                        dur="1s"
+                        repeatCount="indefinite"
+                    />
+                </circle>
+            </svg>
+        </div>
+    );
+
     return (
         <div style={{ textAlign: 'center' }}>
             {!stream ? (
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '1rem' }} >
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '1rem' }}>
                     <button onClick={openCamera}>Open Camera</button>
                     <UploadButton onUpload={(c, url) => scanAndSet(c, url)} />
                 </div>
@@ -115,9 +159,7 @@ const Camera: React.FC = () => {
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '1rem' }}>
                     <button onClick={closeCamera}>Close Camera</button>
                     {!snapshot ? (
-                        <>
-                            <button onClick={takeSnapshot}>Snapshot</button>
-                        </>
+                        <button onClick={takeSnapshot}>Snapshot</button>
                     ) : (
                         <button onClick={() => { setSnapshot(null); setQrResult(null); }}>Retake</button>
                     )}
@@ -134,23 +176,26 @@ const Camera: React.FC = () => {
                             alt="Snapshot"
                             style={{ width: 400, height: 300, borderRadius: 8, boxShadow: '0 2px 10px rgba(0,0,0,0.2)' }}
                         />
-                        {qrResult && (
-                            <p style={{ marginTop: '0.5rem', fontWeight: 'bold' }}>
-                                QR Code:{' '}
-                                {isValidUrl(qrResult) ? (
-                                    <a
-                                        href={qrResult}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        style={{ color: '#0066cc', textDecoration: 'underline' }}
-                                    >
-                                        {qrResult}
-                                    </a>
-                                ) : (
-                                    qrResult
-                                )}
-                            </p>
-                        )}
+
+                        {loading
+                            ? spinner
+                            : qrResult && (
+                                <p style={{ marginTop: '0.5rem', fontWeight: 'bold' }}>
+                                    QR Code:{' '}
+                                    {isValidUrl(qrResult) ? (
+                                        <a
+                                            href={qrResult}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{ color: '#0066cc', textDecoration: 'underline' }}
+                                        >
+                                            {qrResult}
+                                        </a>
+                                    ) : (
+                                        qrResult
+                                    )}
+                                </p>
+                            )}
                     </>
                 ) : stream ? (
                     <video
@@ -161,7 +206,7 @@ const Camera: React.FC = () => {
                     />
                 ) : null}
             </div>
-        </div >
+        </div>
     );
 };
 

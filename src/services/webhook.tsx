@@ -39,7 +39,6 @@ export async function sendQrToWebhook(qrUrl: string): Promise<any> {
         } else {
             // Return text if not JSON
             const text = await response.text();
-            console.log(text);
             return text;
         }
     } catch (error) {
