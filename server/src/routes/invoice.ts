@@ -45,10 +45,13 @@ router.post('/', async (req, res, next) => {
                     i.date,
                 ]
             });
-            await conn.query(
-                `INSERT INTO invoice_items 
-                (invoice_id, name, category, unit, unit_price, quantity, price, date)
-                VALUES ?`,
+            await conn.query(`
+                INSERT INTO 
+                    invoice_items 
+                        (invoice_id, name, category, unit, unit_price, quantity, price, date)
+                VALUES 
+                    ?
+                `,
                 [values]
             );
         }
@@ -62,5 +65,37 @@ router.post('/', async (req, res, next) => {
         conn.release();
     }
 });
+/**
+ * GET /api/invoice
+ * → Returns all invoice_items with the shape of InvoiceItemPayload
+ */
+router.get('/', async (req, res, next) => {
+    try {
+        // Pull every column you defined in InvoiceItemPayload
+        const [rows] = await pool.query<any[]>(`
+            SELECT 
+                id, name, category, unit, unit_price, quantity, price, date
+            FROM 
+                invoice_items`
+        );
 
+        // Map and format date as ISO yyyy-MM-dd strings
+        const items: InvoiceItemPayload[] = rows.map(r => ({
+            id: r.id,
+            name: r.name,
+            category: r.category,
+            unit: r.unit,
+            unit_price: r.unit_price,
+            quantity: r.quantity,
+            price: r.price,
+            date: (r.date instanceof Date)
+                ? r.date.toISOString().split('T')[0]
+                : r.date,
+        }));
+
+        res.json(items);
+    } catch (err) {
+        next(err);
+    }
+});
 export default router;

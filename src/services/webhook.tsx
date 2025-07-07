@@ -1,48 +1,37 @@
 // src/services/webhook.ts
 
-// Load the webhook URL from environment variables (must start with REACT_APP_ for Create React App)
-const WEBHOOK_URL = process.env.REACT_APP_N8N_WEBHOOK_URL;
+import axios from 'axios'
+import { getInvoiceItems } from './invoiceService'  // assumes you already have an API client for invoice_items
 
-if (!WEBHOOK_URL) {
-    console.warn('Environment variable REACT_APP_N8N_WEBHOOK_URL is not defined.');
+export interface InvoiceItem {
+    name: string
+    category: string
+    date: string        // or `Date`, depending on your API
 }
 
 /**
- * Sends a scanned QR URL to the configured n8n webhook and returns the response payload.
- * @param qrUrl - The URL extracted from the QR code
- * @returns The JSON response from n8n, or null if non-JSON or on error.
+ * Send a payload to the n8n webhook that includes both
+ * the scanned QR URL and every invoice item (name, category, date).
  */
-export async function sendQrToWebhook(qrUrl: string): Promise<any> {
-    if (!WEBHOOK_URL) {
-        throw new Error('Missing n8n webhook URL');
-    }
-
+export async function sendReceiptWebhook(qrUrl: string) {
     try {
-        const response = await fetch(WEBHOOK_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ qrUrl }),
-        });
+        // 1. Fetch all invoice items from your MySQL-backed API
+        const items: InvoiceItem[] = await getInvoiceItems()
 
-        if (!response.ok) {
-            throw new Error(`Webhook responded with status ${response.status}`);
+        // 2. Build the payload
+        const payload = {
+            qrUrl,
+            items: items.map(({ name, category, date }) => ({ name, category, date })),
         }
 
-        // Attempt to parse and return JSON payload
-        const contentType = response.headers.get('Content-Type') || '';
-        if (contentType.includes('application/json')) {
-            const data = await response.json();
-            console.log(data);
-            return data;
-        } else {
-            // Return text if not JSON
-            const text = await response.text();
-            return text;
-        }
-    } catch (error) {
-        console.error('Failed to send QR to webhook:', error);
-        throw error;
+        // 3. POST to the n8n webhook
+        const webhookUrl = process.env.REACT_APP_N8N_WEBHOOK_URL!
+        const response = await axios.post(webhookUrl, payload)
+
+        console.log('✅ Webhook delivered:', response.data)
+        return response.data
+    } catch (err) {
+        console.error('❌ Failed to send webhook:', err)
+        throw err
     }
 }

@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import jsQR from 'jsqr';
 import UploadButton from './UploadButton';
-import { sendQrToWebhook } from '../services/webhook';
+import { sendReceiptWebhook } from '../services/webhook';
 
 // helper to scan a single canvas
 const tryScan = (canvas: HTMLCanvasElement) => {
@@ -98,7 +98,7 @@ const Camera: React.FC<CameraProps> = ({ onQrResponse }) => {
         // send to webhook and notify parent
         if (codeData && isValidUrl(codeData)) {
             setLoading(true);
-            sendQrToWebhook(codeData)
+            sendReceiptWebhook(codeData)
                 .then(response => {
                     onQrResponse?.(response);
                 })
