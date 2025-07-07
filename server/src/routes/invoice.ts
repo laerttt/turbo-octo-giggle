@@ -21,7 +21,6 @@ router.post('/', async (req, res, next) => {
         date: string | null;
         items: InvoiceItemPayload[];
     };
-
     const conn = await pool.getConnection();
     try {
         await conn.beginTransaction();
@@ -34,17 +33,18 @@ router.post('/', async (req, res, next) => {
 
         // Bulk insert all items
         if (items.length) {
-            const values = items.map(i => [
-                invoiceId,
-                i.name,
-                i.category,
-                i.unit,
-                i.unit_price,
-                i.quantity,
-                i.price,
-                i.date,
-            ]);
-
+            const values = items.map(i => {
+                return [
+                    invoiceId,
+                    i.name,
+                    i.category,
+                    i.unit,
+                    i.unit_price,
+                    i.quantity,
+                    i.price,
+                    i.date,
+                ]
+            });
             await conn.query(
                 `INSERT INTO invoice_items 
                 (invoice_id, name, category, unit, unit_price, quantity, price, date)

@@ -12,7 +12,7 @@ export interface InvoiceItem {
     priceAfterVat: number;
 }
 
-// We now expect items[0] to be your “header” with a `crtd` string,
+// We now expect items[0] to be your "header" with a `crtd` string,
 // and the rest to match InvoiceItem
 type DigitalInvoiceProps = {
     items: any[];
@@ -68,7 +68,16 @@ const DigitalInvoice: React.FC<DigitalInvoiceProps> = ({ items }) => {
 
             const payload = {
                 date: isoDate,
-                items: invoiceItems.map(({ originalCategory, ...i }) => i)
+                items: invoiceItems.map(({ originalCategory, ...item }) => ({
+                    id: item.id,
+                    name: item.name,
+                    category: item.category,
+                    unit: item.unit,
+                    unit_price: item.unitPriceAfterVat,  // Map unitPriceAfterVat to unit_price
+                    quantity: item.quantity,
+                    price: item.priceAfterVat,           // Map priceAfterVat to price
+                    date: isoDate ? isoDate.split('T')[0] : new Date().toISOString().split('T')[0] // Convert to YYYY-MM-DD format
+                }))
             };
 
             const res = await fetch('api/invoice', {
