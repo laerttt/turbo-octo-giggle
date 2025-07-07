@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Camera from './components/Camera';
 import DigitalInvoice, { InvoiceItem } from './components/DigitalInvoice';
+import Analytics from './components/Analytics';
 
 const App: React.FC = () => {
   const [invoiceItems, setInvoiceItems] = useState<InvoiceItem[]>([]);
@@ -15,8 +16,9 @@ const App: React.FC = () => {
 
       }} />
 
-      <h1 style={{ margin: '2rem 0 1rem' }}>Digital Invoice</h1>
+      <h1 style={{ margin: '2rem  1rem 1rem' }}>Digital Invoice</h1>
       <DigitalInvoice items={invoiceItems} />
+      <Analytics />
     </div>
   );
 };

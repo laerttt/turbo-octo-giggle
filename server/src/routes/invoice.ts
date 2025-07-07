@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { pool } from '../db';
-import type { ResultSetHeader } from 'mysql2';
 
 export interface InvoiceItemPayload {
     id: number;

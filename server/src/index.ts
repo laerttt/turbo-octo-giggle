@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { initDb } from './db';
 import invoiceRouter from './routes/invoice';
+import analyticsRouter from './routes/analytics';
 
 async function bootstrap() {
     await initDb();
@@ -11,6 +12,7 @@ async function bootstrap() {
     app.use(express.json());
 
     // Note: matches your front-end fetch('/api/invoice', …)
+    app.use('/api/analytics', analyticsRouter);
     app.use('/api/invoice', invoiceRouter);
 
     const port = Number(process.env.PORT) || 4000;
