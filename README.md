@@ -3,7 +3,17 @@
 A React + Node.js application that lets users upload or scan receipt QR codes, view and categorize receipt items (powered by a LLM), manually correct categories to improve the model, and save receipts into a MySQL database. The Analytics section allows you to query your saved receipts (e.g. "How much did I spend last month?", "What was the price of coffee?").
 
 ---
+### 🪧 Screenshots & Demos
+#### 1. No QR Code scanned yet
+![1](./assets/sc3.png)
+#### 2. Editing categories
+![2](./assets/sc1.png)
+#### 3. Asking for analytics
+![3](./assets/sc2.png)
+#### Extra long demo gif
+![4](./assets/gif.gif)
 
+---
 ### 🚀 Features
 
 * **Upload or Scan QR codes** via camera or file upload
