@@ -1,46 +1,130 @@
-# Getting Started with Create React App
+## Receipt Scanner & Analytics App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React + Node.js application that lets users upload or scan receipt QR codes, view and categorize receipt items (powered by a LLM), manually correct categories to improve the model, and save receipts into a MySQL database. The Analytics section allows you to query your saved receipts (e.g. "How much did I spend last month?", "What was the price of coffee?").
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+### 🚀 Features
 
-### `npm start`
+* **Upload or Scan QR codes** via camera or file upload
+* **LLM-based item categorization** with manual override to improve accuracy
+* **Persistent storage** of receipts and items in MySQL
+* **Analytics interface**: Ask natural-language questions about your spending history
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 📋 Prerequisites
 
-### `npm test`
+1. **Git** (to clone the repo)
+2. **Node.js** (v14+)
+3. **npm** or **yarn**
+4. **MySQL** (local instance)
+5. **n8n** (automation & webhook orchestration)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 🔧 Installation & Setup
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Clone the repository**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   ```bash
+   git clone https://github.com/your-org/receipt-scanner.git
+   cd receipt-scanner
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **Configure the Server**
 
-### `npm run eject`
+   * Copy and rename the example env file:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+     ```bash
+     cp server/.env.example server/.env
+     ```
+   * Open `server/.env` and fill in your MySQL connection details:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+     ```env
+     DB_HOST=localhost
+     DB_USER=your_db_user
+     DB_PASSWORD=your_db_password
+     DB_NAME=receipt_db
+     ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+3. **Configure the Webapp & n8n**
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+   * In the project root, copy and rename the template:
 
-## Learn More
+     ```bash
+     cp .env.template .env
+     ```
+   * Open `.env` and:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+     1. Paste the **Get Data from Webapp** webhook URL from your n8n workflow.
+     2. Paste the **Get User Question + Data** webhook URL into `server/.env` if not already there.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+4. **Import n8n Workflow**
+
+   1. Start n8n: `n8n start`
+   2. In the n8n UI, import `workflow.json` from the project root.
+   3. You’ll see two entry points:
+
+      * **Get Data from Webapp**
+      * **Get User Question + Data**
+   4. Copy each entry’s webhook URL into the appropriate `.env` variables.
+
+5. **Install dependencies** in both directories
+
+   ```bash
+   # In project root
+   npm install
+
+   # In server directory
+   cd server && npm install && cd ..
+   ```
+
+---
+
+## ▶️ Running the App
+
+1. **Start the server**
+
+   ```bash
+   cd server
+   npm start
+   ```
+
+2. **Start the React frontend**
+
+   ```bash
+   cd ..
+   npm start
+   ```
+
+Frontend will be available at `http://localhost:3000` by default.
+
+---
+
+## 📈 Usage
+
+1. **Upload** a receipt QR image or **scan** via camera.
+2. After scanning, the app shows:
+
+   * The original receipt URL
+   * A table of items with auto-generated categories
+3. **Edit** any incorrect categories directly in the table.
+4. Click **Save to Database** to persist the receipt and items.
+5. Switch to the **Analytics** tab to ask natural-language questions about your spending:
+
+   * "How much did I spend last week?"
+   * "What was the cost of item X?"
+   * "Show me all groceries in March 2025"
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request.
+
+---
+
+## 📄 License
+
+[MIT](LICENSE)

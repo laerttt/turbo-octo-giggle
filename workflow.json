@@ -8,10 +8,10 @@
             "type": "n8n-nodes-base.splitOut",
             "typeVersion": 1,
             "position": [
-                -660,
-                -1125
+                300,
+                80
             ],
-            "id": "9afb31ac-4946-415a-970b-25a54ea59962",
+            "id": "0fe1cf99-fcf3-40c4-8ce4-cfacc0382b66",
             "name": "Split Out"
         },
         {
@@ -43,10 +43,10 @@
             "type": "n8n-nodes-base.set",
             "typeVersion": 3.4,
             "position": [
-                -1100,
-                -1200
+                -140,
+                0
             ],
-            "id": "e439e9a5-81ed-47e5-bda0-b3c57a794be7",
+            "id": "6fc84d39-90d2-410e-a851-1b4f80bc1a48",
             "name": "get body data"
         },
         {
@@ -84,10 +84,10 @@
             "type": "n8n-nodes-base.httpRequest",
             "typeVersion": 4.2,
             "position": [
-                -880,
-                -1125
+                80,
+                80
             ],
-            "id": "c372f72f-9fca-4602-ab79-09ef1f6b475c",
+            "id": "c20cf2d0-7fbc-4756-b994-097f104be774",
             "name": "request verifyInvoice"
         },
         {
@@ -107,10 +107,10 @@
             "type": "n8n-nodes-base.set",
             "typeVersion": 3.4,
             "position": [
-                140,
-                -900
+                1100,
+                300
             ],
-            "id": "43390ae8-3b32-4994-a9e3-764a5c91b212",
+            "id": "5edaadc1-332b-4faa-8556-e3733989a198",
             "name": "edit output"
         },
         {
@@ -121,10 +121,10 @@
             "type": "n8n-nodes-base.respondToWebhook",
             "typeVersion": 1.4,
             "position": [
-                800,
-                -1100
+                1760,
+                100
             ],
-            "id": "b89a0b18-56f1-4495-9495-6b2391e4a0aa",
+            "id": "ae15c6f7-3061-4fb8-af5e-60ab7704fc0b",
             "name": "respond to webapp"
         },
         {
@@ -144,10 +144,10 @@
             "type": "n8n-nodes-base.set",
             "typeVersion": 3.4,
             "position": [
-                -660,
-                -850
+                300,
+                360
             ],
-            "id": "70485193-d94e-44a8-adb5-938c82ebe767",
+            "id": "67a31f6b-b061-4fc5-927f-fd85593788dc",
             "name": "category data"
         },
         {
@@ -160,10 +160,10 @@
             "type": "n8n-nodes-base.webhook",
             "typeVersion": 2,
             "position": [
-                -1320,
-                -1100
+                -360,
+                100
             ],
-            "id": "2e77a5ff-b51e-4791-b172-623fec7b6920",
+            "id": "d5697d5d-1fef-4f8a-9314-210b1918836f",
             "name": "get data from webapp",
             "webhookId": "5e2c443b-fd50-48ce-8946-e6a006f37493"
         },
@@ -176,10 +176,10 @@
             "type": "n8n-nodes-base.merge",
             "typeVersion": 3.2,
             "position": [
-                -440,
-                -900
+                520,
+                300
             ],
-            "id": "caf9339e-aa31-480b-8592-962af11d9d06",
+            "id": "0fb363e0-f5e9-4628-b611-116d57f3a259",
             "name": "user input + training data"
         },
         {
@@ -191,10 +191,10 @@
             "type": "n8n-nodes-base.merge",
             "typeVersion": 3.2,
             "position": [
-                360,
-                -1025
+                1320,
+                180
             ],
-            "id": "4fcfe05e-3edc-4c08-b1bc-4a8390fdcb9d",
+            "id": "ce00dbee-6c87-4dc1-8f58-ff38698528b4",
             "name": "category + other data"
         },
         {
@@ -202,10 +202,10 @@
             "type": "n8n-nodes-base.merge",
             "typeVersion": 3.2,
             "position": [
-                580,
-                -1100
+                1540,
+                100
             ],
-            "id": "5868dc7d-273f-42ef-875d-79cce697d403",
+            "id": "5e89b2f7-23de-4264-ad0c-44e9d5bc4fa2",
             "name": "date + other data"
         },
         {
@@ -218,10 +218,10 @@
             "type": "n8n-nodes-base.webhook",
             "typeVersion": 2,
             "position": [
-                -1260,
-                -560
+                -300,
+                640
             ],
-            "id": "e7007e21-ee15-4a8e-8b37-4795cdc59ddd",
+            "id": "e18bbbb2-9d94-4ef8-86b9-12244167ff00",
             "name": "get user question+ data",
             "webhookId": "f19e2e1b-6572-4e3a-ae89-61a00238f5cc"
         },
@@ -233,10 +233,10 @@
             "type": "n8n-nodes-base.respondToWebhook",
             "typeVersion": 1.4,
             "position": [
-                -680,
-                -560
+                280,
+                640
             ],
-            "id": "b3bff254-3f06-485c-a553-14f5ed237411",
+            "id": "79030f15-aa6a-4148-b88f-4813962dfb37",
             "name": "respond with answer"
         },
         {
@@ -247,10 +247,10 @@
             "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
             "typeVersion": 1,
             "position": [
-                -140,
-                -680
+                700,
+                660
             ],
-            "id": "3cef8f0a-23f1-4dda-bc82-e5f4a2e6cee5",
+            "id": "143615a9-5178-420f-a55e-0ea98c11c1f2",
             "name": "gemini 2.5 flash",
             "credentials": {
                 "googlePalmApi": {
@@ -267,10 +267,10 @@
             "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
             "typeVersion": 1,
             "position": [
-                -960,
-                -440
+                0,
+                760
             ],
-            "id": "bd888147-835b-400d-811e-ad6e51d6e330",
+            "id": "16339795-67fa-4209-8fef-80b4d91925e4",
             "name": "gemini 2.5 flash1",
             "credentials": {
                 "googlePalmApi": {
@@ -290,10 +290,10 @@
             "type": "@n8n/n8n-nodes-langchain.agent",
             "typeVersion": 2,
             "position": [
-                -220,
-                -900
+                740,
+                300
             ],
-            "id": "356d140c-38e6-4659-bc75-ab48915efe7a",
+            "id": "bc21ed54-ba92-4962-911f-1c84acf77ced",
             "name": "Categorizer Agent"
         },
         {
@@ -307,10 +307,10 @@
             "type": "@n8n/n8n-nodes-langchain.agent",
             "typeVersion": 2,
             "position": [
-                -1040,
-                -660
+                -80,
+                540
             ],
-            "id": "e75b976e-7ef6-475e-8387-6432c9fe1d88",
+            "id": "d994a729-1938-4ba7-b212-6807273c0806",
             "name": "Analytics Agent"
         }
     ],
@@ -487,7 +487,6 @@
     },
     "pinData": {},
     "meta": {
-        "templateCredsSetupCompleted": true,
         "instanceId": "eeb3a955b8a4397b75f7ea4ec6adcd71a61f511a947fc165d657e58a69603e4f"
     }
 }
