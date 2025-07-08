@@ -1,0 +1,493 @@
+{
+    "nodes": [
+        {
+            "parameters": {
+                "fieldToSplitOut": "items",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.splitOut",
+            "typeVersion": 1,
+            "position": [
+                -660,
+                -1125
+            ],
+            "id": "9afb31ac-4946-415a-970b-25a54ea59962",
+            "name": "Split Out"
+        },
+        {
+            "parameters": {
+                "assignments": {
+                    "assignments": [
+                        {
+                            "id": "0d13abd7-2025-478d-b4c5-abce0ff74e24",
+                            "name": "iic",
+                            "value": "={{ $json.body.qrUrl.split('iic=')[1].split('&')[0] }}",
+                            "type": "string"
+                        },
+                        {
+                            "id": "ae968358-b141-4eb9-9b69-d90adc3fce45",
+                            "name": "tin",
+                            "value": "={{ $json.body.qrUrl.split('tin=')[1].split('&')[0] }}",
+                            "type": "string"
+                        },
+                        {
+                            "id": "9c40befa-bf82-4601-850e-8625d01919ee",
+                            "name": "crtd",
+                            "value": "={{ $json.body.qrUrl.split('crtd=')[1].split('&')[0].replace('+',' ') }}",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                -1100,
+                -1200
+            ],
+            "id": "e439e9a5-81ed-47e5-bda0-b3c57a794be7",
+            "name": "get body data"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://efiskalizimi-app.tatime.gov.al/invoice-check/api/verifyInvoice",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/x-www-form-urlencoded;charset=UTF-8"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "iic",
+                            "value": "={{ $json.iic }}"
+                        },
+                        {
+                            "name": "dateTimeCreated",
+                            "value": "={{ $json.crtd }}"
+                        },
+                        {
+                            "name": "tin",
+                            "value": "={{ $json.tin }}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                -880,
+                -1125
+            ],
+            "id": "c372f72f-9fca-4602-ab79-09ef1f6b475c",
+            "name": "request verifyInvoice"
+        },
+        {
+            "parameters": {
+                "assignments": {
+                    "assignments": [
+                        {
+                            "id": "a4365d29-25b4-498f-945c-93007d37281c",
+                            "name": "category",
+                            "value": "={{ $json.output }}",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                140,
+                -900
+            ],
+            "id": "43390ae8-3b32-4994-a9e3-764a5c91b212",
+            "name": "edit output"
+        },
+        {
+            "parameters": {
+                "respondWith": "allIncomingItems",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.4,
+            "position": [
+                800,
+                -1100
+            ],
+            "id": "b89a0b18-56f1-4495-9495-6b2391e4a0aa",
+            "name": "respond to webapp"
+        },
+        {
+            "parameters": {
+                "assignments": {
+                    "assignments": [
+                        {
+                            "id": "95f5cdb3-b21f-46ef-b694-be38974de7c3",
+                            "name": "database_items",
+                            "value": "={{ $json.body.items }}",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                -660,
+                -850
+            ],
+            "id": "70485193-d94e-44a8-adb5-938c82ebe767",
+            "name": "category data"
+        },
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "5e2c443b-fd50-48ce-8946-e6a006f37493",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                -1320,
+                -1100
+            ],
+            "id": "2e77a5ff-b51e-4791-b172-623fec7b6920",
+            "name": "get data from webapp",
+            "webhookId": "5e2c443b-fd50-48ce-8946-e6a006f37493"
+        },
+        {
+            "parameters": {
+                "mode": "combine",
+                "combineBy": "combineAll",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.merge",
+            "typeVersion": 3.2,
+            "position": [
+                -440,
+                -900
+            ],
+            "id": "caf9339e-aa31-480b-8592-962af11d9d06",
+            "name": "user input + training data"
+        },
+        {
+            "parameters": {
+                "mode": "combine",
+                "combineBy": "combineByPosition",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.merge",
+            "typeVersion": 3.2,
+            "position": [
+                360,
+                -1025
+            ],
+            "id": "4fcfe05e-3edc-4c08-b1bc-4a8390fdcb9d",
+            "name": "category + other data"
+        },
+        {
+            "parameters": {},
+            "type": "n8n-nodes-base.merge",
+            "typeVersion": 3.2,
+            "position": [
+                580,
+                -1100
+            ],
+            "id": "5868dc7d-273f-42ef-875d-79cce697d403",
+            "name": "date + other data"
+        },
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "f19e2e1b-6572-4e3a-ae89-61a00238f5cc",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                -1260,
+                -560
+            ],
+            "id": "e7007e21-ee15-4a8e-8b37-4795cdc59ddd",
+            "name": "get user question+ data",
+            "webhookId": "f19e2e1b-6572-4e3a-ae89-61a00238f5cc"
+        },
+        {
+            "parameters": {
+                "respondWith": "allIncomingItems",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.4,
+            "position": [
+                -680,
+                -560
+            ],
+            "id": "b3bff254-3f06-485c-a553-14f5ed237411",
+            "name": "respond with answer"
+        },
+        {
+            "parameters": {
+                "modelName": "models/gemini-2.5-flash",
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                -140,
+                -680
+            ],
+            "id": "3cef8f0a-23f1-4dda-bc82-e5f4a2e6cee5",
+            "name": "gemini 2.5 flash",
+            "credentials": {
+                "googlePalmApi": {
+                    "id": "H5826MvBdHpdpD1N",
+                    "name": "Google Gemini(PaLM) Api account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "modelName": "models/gemini-2.5-flash",
+                "options": {}
+            },
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                -960,
+                -440
+            ],
+            "id": "bd888147-835b-400d-811e-ad6e51d6e330",
+            "name": "gemini 2.5 flash1",
+            "credentials": {
+                "googlePalmApi": {
+                    "id": "H5826MvBdHpdpD1N",
+                    "name": "Google Gemini(PaLM) Api account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "={{ $json.name }}",
+                "options": {
+                    "systemMessage": "=You have a reference list of items, each with a name, a category, and a date:\n{{ $json.database_items }}\nWhenever the user submits an item name (which might be in any language):\n\n1. **Exact match**  \n   • Look up the item in the reference list (case-insensitive).  \n   • If you find it, return its category.\n\n2. **Duplicate entries**  \n   • If the same name appears multiple times with different categories, choose the category that occurs most often for that item in the list.  \n   • If two (or more) categories tie for most occurrences, pick the one with the newest date.\n\n\n3. **No exact match**  \n   • Translate the user’s word into English.  \n   • Based on its meaning, assign the most appropriate category yourself."
+                }
+            },
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "typeVersion": 2,
+            "position": [
+                -220,
+                -900
+            ],
+            "id": "356d140c-38e6-4659-bc75-ab48915efe7a",
+            "name": "Categorizer Agent"
+        },
+        {
+            "parameters": {
+                "promptType": "define",
+                "text": "={{ $json.body.question }}",
+                "options": {
+                    "systemMessage": "=The agent knows the following invoice items:\n{{ JSON.stringify($json.body.items, null, 1) }}\n**Behavior rules:**  \n1. Always reply **in the same language** the user uses.  \n2. Never mention that these come from a provided dataset—just act as if you “know” them.  \n3. When quoting or calculating prices, append “ALL” for the currency.  \n4. Base all answers strictly on these items: names, categories, dates, units, prices.  \n5. For any summary (totals, averages, comparisons), perform the math step by step in the user’s language.  \n6. For trend or per-unit analyses (e.g. “most expensive per KG?”), use only the given data.\n\nProceed by answering the user’s next question.  \n"
+                }
+            },
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "typeVersion": 2,
+            "position": [
+                -1040,
+                -660
+            ],
+            "id": "e75b976e-7ef6-475e-8387-6432c9fe1d88",
+            "name": "Analytics Agent"
+        }
+    ],
+    "connections": {
+        "Split Out": {
+            "main": [
+                [
+                    {
+                        "node": "category + other data",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "user input + training data",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "get body data": {
+            "main": [
+                [
+                    {
+                        "node": "request verifyInvoice",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "date + other data",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "request verifyInvoice": {
+            "main": [
+                [
+                    {
+                        "node": "Split Out",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "edit output": {
+            "main": [
+                [
+                    {
+                        "node": "category + other data",
+                        "type": "main",
+                        "index": 1
+                    }
+                ]
+            ]
+        },
+        "category data": {
+            "main": [
+                [
+                    {
+                        "node": "user input + training data",
+                        "type": "main",
+                        "index": 1
+                    }
+                ]
+            ]
+        },
+        "get data from webapp": {
+            "main": [
+                [
+                    {
+                        "node": "get body data",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "category data",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "user input + training data": {
+            "main": [
+                [
+                    {
+                        "node": "Categorizer Agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "category + other data": {
+            "main": [
+                [
+                    {
+                        "node": "date + other data",
+                        "type": "main",
+                        "index": 1
+                    }
+                ]
+            ]
+        },
+        "date + other data": {
+            "main": [
+                [
+                    {
+                        "node": "respond to webapp",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "get user question+ data": {
+            "main": [
+                [
+                    {
+                        "node": "Analytics Agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "gemini 2.5 flash": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "Categorizer Agent",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "gemini 2.5 flash1": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "Analytics Agent",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Categorizer Agent": {
+            "main": [
+                [
+                    {
+                        "node": "edit output",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Analytics Agent": {
+            "main": [
+                [
+                    {
+                        "node": "respond with answer",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "pinData": {},
+    "meta": {
+        "templateCredsSetupCompleted": true,
+        "instanceId": "eeb3a955b8a4397b75f7ea4ec6adcd71a61f511a947fc165d657e58a69603e4f"
+    }
+}

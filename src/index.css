@@ -1,13 +1,77 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Lucida Grande', Tahoma, Verdana, Arial, sans-serif;
+  font-size: 11px;
+  background-color: #fff;
+  color: #333;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: Monaco, monospace;
+  font-size: 11px;
+}
+
+/* Old Facebook blue theme */
+.fb-header {
+  background-color: #3b5998;
+  color: white;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: bold;
+  border-bottom: 1px solid #1d4088;
+}
+
+.fb-button {
+  background-color: #5b7bd5;
+  color: white;
+  border: 1px solid #4a6bb3;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 2px;
+  font-family: 'Lucida Grande', Tahoma, Verdana, Arial, sans-serif;
+}
+
+.fb-button:hover {
+  background-color: #6d8ae1;
+}
+
+.fb-button:disabled {
+  background-color: #cccccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.fb-input {
+  border: 1px solid #bdc7d8;
+  padding: 3px 5px;
+  font-size: 11px;
+  font-family: 'Lucida Grande', Tahoma, 2009, Verdana, Arial, sans-serif;
+  border-radius: 2px;
+}
+
+.fb-input:focus {
+  border-color: #5b7bd5;
+  outline: none;
+}
+
+.fb-box {
+  border: 1px solid #d8dfea;
+  background-color: #f7f7f7;
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+.fb-link {
+  color: #3b5998;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.fb-link:hover {
+  text-decoration: underline;
 }

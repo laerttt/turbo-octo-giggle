@@ -29,7 +29,22 @@ const UploadButton: React.FC<UploadButtonProps> = ({ onUpload }) => {
 
     return (
         <>
-            <button onClick={() => inputRef.current?.click()}>Upload Image</button>
+            <button
+                onClick={() => inputRef.current?.click()}
+                style={{
+                    backgroundColor: '#5b7bd5',
+                    color: 'white',
+                    border: '1px solid #4a6bb3',
+                    padding: '3px 8px',
+                    fontSize: '11px',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    borderRadius: '2px',
+                    fontFamily: 'Lucida Grande, Tahoma, Verdana, Arial, ✽serif'
+                }}
+            >
+                Upload Image
+            </button>
             <input
                 type="file"
                 accept="image/*"
